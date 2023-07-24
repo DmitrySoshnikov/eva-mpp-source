@@ -1,0 +1,39 @@
+#!/usr/bin/env node
+
+/**
+ * Eva MPP (Message-Passing Processes).
+ *
+ * (C) 2023-present Dmitry Soshnikov <dmitry.soshnikov@gmail.com>
+ */
+
+'use strict';
+
+const fs = require('node:fs');
+
+const {EvaMPP} = require('../src/transpiler/EvaMPP');
+
+function main(argv) {
+  const [_node, _path, mode, exp] = argv;
+
+  const eva = new EvaMPP();
+
+  let program;
+
+  // 1. Direct expression:
+
+  if (mode === '-e') {
+    program = exp;
+  }
+
+  // 2. Eva file:
+
+  if (mode === '-f') {
+    program = fs.readFileSync(exp, 'utf-8');
+  }
+
+  const {target} = eva.compile(program, './out.js');
+
+  console.log(target);
+}
+
+main(process.argv);

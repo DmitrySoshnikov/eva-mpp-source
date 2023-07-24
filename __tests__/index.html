@@ -1,0 +1,143 @@
+<!--
+ Eva MPP (Message-Passing Processes).
+
+ (C) 2023-present Dmitry Soshnikov <dmitry.soshnikov@gmail.com>
+-->
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>MPP Lang</title>
+    <style type="text/css">
+      .process {
+        width: 0px;
+        margin-top: 2px;
+        transition: width 0.3s;
+        text-align: center;
+        color: #FFF;
+        border: 1px solid #333;
+      }
+
+      .finish {
+        position: absolute;
+        left: 1000px;
+        height: 120px;
+        width: 5px;
+        background-color: #04b0d2;
+        border: 1px solid #000;
+        font-size: 60px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="finish">🏁</div>
+
+    <script type="text/javascript" src="../src/runtime/Process.js"></script>
+    <script type="text/javascript" src="../src/runtime/Scheduler.js"></script>
+    <script type="text/javascript" src="../src/runtime/index.js"></script>
+
+    <!-- Compiled Eva code -->
+    <script type="text/javascript" src="../out.js"></script>
+
+    <script type="text/javascript">
+
+      // --------------------------------------------------
+      // Util functions:
+
+      const RACE_LENGTH = 1000;
+
+      function incWidth(el, delta) {
+        let newWidth = getWidth(el) + delta;
+
+        if (newWidth > RACE_LENGTH) {
+          newWidth = RACE_LENGTH;
+        }
+
+        el.style.width = `${newWidth}px`;
+      }
+
+      function getWidth(el) {
+        return parseInt(el.style.width, 10) || 0;
+      }
+
+      function randomHexColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+
+        for (let i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }
+
+        return color;
+      }
+
+      function random(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      function createElement() {
+        const el = document.createElement('div');
+        el.className = 'process';
+        el.style = `background-color: ${randomHexColor()};`;
+        el.innerHTML = `P${Process.pid + 1}`;
+        document.body.appendChild(el);
+        return el;
+      }
+
+      // --------------------------------------------------
+      // Create processes:
+
+      const PROCESS_COUNT = 5;
+      const processes = [];
+
+      function getRandomProcess() {
+        return processes[random(0, PROCESS_COUNT - 1)];
+      }
+
+      for (let i = 0; i < PROCESS_COUNT; i++) {
+        processes.push(
+          // Note: _handleProcess is defined in Eva (out.js)
+          spawn(_handleProcess, createElement()),
+        );
+      }
+
+      const sender = getRandomProcess();
+      const receiver = getRandomProcess();
+
+      // Start the race!
+
+      send(receiver, {
+        sender,
+        delay: random(50, 200),
+        delta: random(5, 50),
+      });
+
+    </script>
+
+
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

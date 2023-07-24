@@ -1,0 +1,35 @@
+/**
+ * Eva MPP (Message-Passing Processes).
+ *
+ * (C) 2023-present Dmitry Soshnikov <dmitry.soshnikov@gmail.com>
+ */
+
+/**
+ * Process handler.
+ *
+ * Receives a message from an arbitrary process. The message contains
+ * delay, for which this process should sleep, and a delta on which the
+ * process element should increase its width. Then the process sends a new
+ * message with a random data to the next random process.
+ */
+
+(def handle-process (el)
+  (while (< (get-width el) RACE_LENGTH)
+    (receive request
+      (rec sender delay delta)
+      (begin
+
+        (inc-width el delta)
+        (var receiver (get-random-process))
+
+        (send receiver
+          (rec
+            (sender self)
+            (delay (random 5 200))
+            (delta (random 5 50))))
+
+        (sleep delay)
+      )
+    )
+  )
+)
