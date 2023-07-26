@@ -19,5 +19,6 @@ if (exp[0] === "var") {
 You can enroll to the full course here:
 
 - On [dmitrysoshnikov.education](https://www.dmitrysoshnikov.education/p/transpiler-from-scratch) school
+- On [Udemy](https://www.udemy.com/course/transpiler-from-scratch/?referralCode=0548270DBC5E06A857FB) platform
 
 More details, classes, articles and info is on [http://dmitrysoshnikov.com](http://dmitrysoshnikov.com).
